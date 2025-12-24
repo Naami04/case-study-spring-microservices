@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: microservice-commandes
+  config:
+    import: optional:configserver:http://localhost:8888
+
+  datasource:
+    url: jdbc:h2:mem:commandes-db
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8085
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,refresh,mappings
+resilience4j:
+  circuitbreaker:
+    instances:
+      produitService:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+  timelimiter:
+    instances:
+      produitService:
+        timeoutDuration: 2s
